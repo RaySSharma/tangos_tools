@@ -33,12 +33,12 @@ def structural_properties(halo, properties):
         structural {list} -- Structural data for main progenitor line
     """
     try:
-        structural = halo.calculate_for_progenitors('t()', *properties)
+        t, *struct = halo.calculate_for_progenitors('t()', *properties)
     except KeyError as err:
         print(err, 'Property not found')   
-        structural = []
+        t, struct = [], []
 
-    return structural
+    return t, struct
 
 def pad_series(to_pad, time_set, time_subset, pad_value=np.nan):
     ''' Fill a copy of "to_pad" with "pad_value" where "time_subset" does not match "time_set"
