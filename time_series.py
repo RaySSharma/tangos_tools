@@ -1,12 +1,14 @@
+import sys
 import numpy as np
 import tangos as db
 
-def histogram_properties(obj, properties):
+def histogram_properties(obj, properties, time):
     """ Live-calculate each histogram property in 'properties'
     
     Arguments:
         obj {tangos.core.halo.Halo, tangos.core.halo.BH (object)} -- Tangos halo/BH object
-        properties {list} -- Ldist of desired histogram properties that exist within Tangos database for that object
+        properties {list} -- List of desired histogram properties that exist within Tangos database for that object
+        time {numpy.array} -- Array of times available in the database to "fill"
     
     Returns:
         histogram {list} -- Time-series histogram data
@@ -14,15 +16,17 @@ def histogram_properties(obj, properties):
     histogram = []
     for i, prop in enumerate(properties):
         try:
-            histogram.append(list(obj.calculate(prop)))
+            hist = list(obj.calculate(prop))
+            histogram.append(hist)
+            continue
         except db.live_calculation.NoResultsError as err:
             print(err, 'Property not calculated for this object:', prop)
         except KeyError as err:
             print(err, 'Property not found:', prop)
+        sys.exit()
+    return time, histogram
 
-    return histogram
-
-def structural_properties(halo, properties):
+def structural_properties(halo, properties, time):
     """ Calculate history of each structural property in 'properties'
     
     Arguments:
@@ -34,11 +38,12 @@ def structural_properties(halo, properties):
     """
     try:
         t, *struct = halo.calculate_for_progenitors('t()', *properties)
+        struct = [pad_series(s, time, t) for s in struct]
+        return t, struct
     except KeyError as err:
         print(err, 'Property not found')   
-        t, struct = [], []
-
-    return t, struct
+    sys.exit()
+    
 
 def pad_series(to_pad, time_set, time_subset, pad_value=np.nan):
     ''' Fill a copy of "to_pad" with "pad_value" where "time_subset" does not match "time_set"
