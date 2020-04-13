@@ -9,12 +9,13 @@ import numpy as np
 import time_series as ts
 
 
-class AnalysisDB(object):
+class TangosTools(object):
     def __init__(self):
         self.parser, self.subparse = self._get_parser_object()
         self.args = self.parser.parse_args(sys.argv[1:])
 
-        print("TANGOS_DB_CONNECTION:", os.environ["TANGOS_DB_CONNECTION"])
+        if self.args.verbose:
+            print("TANGOS_DB_CONNECTION:", os.environ["TANGOS_DB_CONNECTION"])
 
         self.database = pd.HDFStore(self.args.filename)
         self.key = self.args.sim
@@ -148,7 +149,7 @@ class AnalysisDB(object):
         self._write_headers()
 
         if self.args.verbose:
-            print("Generated database")
+            print("Generated database:", os.path.abspath(self.args.filename))
 
     def _write_headers(self):
         headers = {
@@ -195,7 +196,7 @@ class AnalysisDB(object):
         self._write_headers()
 
         if self.args.verbose:
-            print("Added properties:", self.args.properties)
+            print("Added properties:", *self.args.properties)
 
     def calculate_property(self, properties, get_prop=ts.structural_properties):
         num_rows = len(self.halo_numbers) * len(properties)
@@ -236,4 +237,4 @@ class DefaultHelpParser(argparse.ArgumentParser):
 
 
 if __name__ == "__main__":
-    AnalysisDB()
+    TangosTools()
