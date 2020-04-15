@@ -55,7 +55,7 @@ We add the `Mvir` property as well as the `halo_number()` and `dm_density_profil
 ```
 $ ./run_tools.py add-property data.h5 tutorial_changa halos.dat Mvir 'halo_number()' 'dm_density_profile[-1]' --verbose
 
-TANGOS_DB_CONNECTION: /home/ray/Projects/misc-projects/tangos_tools/tangos_data.db
+TANGOS_DB_CONNECTION: /home/RaySSharma/tangos_tools/tangos_data.db
 Added properties: Mvir halo_number() dm_density_profile[-1]
 ```
 
@@ -71,7 +71,7 @@ Finally we can remove properties from the *tangos_tools* database. Here we remov
 ```
 $ ./run_tools.py delete-property data.h5 tutorial_changa Mvir --verbose
 
-TANGOS_DB_CONNECTION: /home/ray/Projects/misc-projects/tangos_tools/tangos_data.db
+TANGOS_DB_CONNECTION: /home/RaySSharma/tangos_tools/tangos_data.db
 Removed properties: Mvir
 ```
 
